@@ -19,25 +19,38 @@ import java.sql.SQLException;
 
 
 public class FileUtils {
+    static FileUtils instance;
     ArrayList<String> files;
 
     public FileUtils(){
         files=new ArrayList<String>();
     }
 
-    public void getFiles(String path){
+    public ArrayList<String> getFilesFromPath(String path){
+        files.clear();
+        searchFiles(path);
+        return(this.files);
+    }
+    public static FileUtils getInstance(){
+        if(instance==null){
+            instance=new FileUtils();
+        }
+        return(instance);
+    }
+
+    public void searchFiles(String path){
         try{
-            System.out.println(path);
             File directory=new File(path);
             String[] f=directory.list();
             for(int i=0;i<f.length;i++){
                 File a=new File(path+"/"+f[i]);
                 if(a.isDirectory()==true){
-                    getFiles(path+"/"+f[i]);
+                    searchFiles(path+"/"+f[i]);
+                }
+                else{
+                    this.files.add(path+"/"+f[i]);
                 }
             }
-            if(f.length>0){
-            this.files.addAll(Arrays.asList(f));}
         }
         catch(Exception e){}
     }

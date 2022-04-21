@@ -14,9 +14,10 @@ public class FileObject implements Serializable{
 
     //This method present only for serialization purposes
     public FileObject(){
-
+        versions=new ArrayList<Version>();
     }
     public FileObject(String path) throws SQLException{
+        versions=new ArrayList<Version>();
         this.path=path;
         this.latestVersionIndex=-1;
         updateVersion();
@@ -30,8 +31,7 @@ public class FileObject implements Serializable{
             e.printStackTrace();
         }
         Version version=new Version(blobid);
-        versions=new ArrayList<Version>();
-        versions.add(version);
+        this.versions.add(version);
         latestVersionIndex+=1;
     }
 
@@ -47,6 +47,10 @@ public class FileObject implements Serializable{
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public int getLatestBlobId(){
+        return(versions.get(latestVersionIndex).blobid);
     }
     
 }
