@@ -15,7 +15,7 @@ public class RepositoryObject implements Serializable {
     private static final long serialVersionUID = 6121244321953105191L;
     public String path;
     public ArrayList<FileObject> files;
-    public ArrayList<CommitObject> commits;
+    public ArrayList<RepositoryObject> commits;
 
     public RepositoryObject(){
 
@@ -24,7 +24,7 @@ public class RepositoryObject implements Serializable {
     public RepositoryObject(String path) throws SQLException{
         this.path=path;
         files=new ArrayList<FileObject>();
-        commits=new ArrayList<CommitObject>();
+        commits=new ArrayList<RepositoryObject>();
         try {
             updateFilesInPath();
         } catch (IOException e) {
@@ -96,7 +96,7 @@ public class RepositoryObject implements Serializable {
                 byte[] b1=b.getBytes(1, (int) b.length());
                 byte[] b2=FileUtils.getByteArrayFromFile(filepaths.get(i));
                 if(!Arrays.equals(b1,b2)){
-                    System.out.println(filepaths.get(i)+"File Changed");
+                    System.out.println(filepaths.get(i)+" File Changed");
                 }
             }
         }
