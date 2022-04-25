@@ -212,7 +212,7 @@ public class Database {
         String SQL_SERIALIZE_OBJECT = "DELETE FROM repositories WHERE path = ?";
         PreparedStatement pstmt = c.prepareStatement(SQL_SERIALIZE_OBJECT);
 		pstmt.setString(1, path);
-		pstmt.executeQuery();
+		pstmt.execute();
     }
 
 }

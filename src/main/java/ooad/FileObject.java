@@ -1,13 +1,19 @@
 package ooad;
 
 import java.util.*;
+
+import javax.xml.crypto.Data;
+
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.sql.Blob;
 import java.sql.SQLException;
 
 public class FileObject implements Serializable{
+    private static final long serialVersionUID =-8577938667472526097L;
     public ArrayList<Version> versions;
     public String path;
     public int latestVersionIndex;
@@ -49,7 +55,36 @@ public class FileObject implements Serializable{
         }
     }
 
+    public boolean updateToPreviousVersion() throws SQLException, IOException, Exception{ 
+        Database db=Database.getInstance();
+        if(versions.size()==1){
+            System.out.println("No previous version of file found to be replaced, hence deleting file");
+            return false;
+        }
+        versions.remove(versions.size()-1);
+        latestVersionIndex-=1;
+        int blobid=versions.get(latestVersionIndex).blobid;
+        Blob b=db.getBlob(blobid);
+        byte[] byt=b.getBytes(1, (int) b.length());
+        OutputStream os = new FileOutputStream(this.path);
+ 
+            // Starting writing the bytes in it
+            os.write(byt);
+ 
+            // Dislay message onconsole for successful
+            // execution
+            System.out.println("Successfully replaced file "+this.path);
+ 
+            // Close the file connections
+            os.close();
+            return(true);
+    }
+
     public int getLatestBlobId(){
+        return(versions.get(latestVersionIndex).blobid);
+    }
+
+    public int getPrevBlobId(){
         return(versions.get(latestVersionIndex).blobid);
     }
     

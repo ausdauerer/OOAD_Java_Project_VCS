@@ -15,7 +15,7 @@ import java.util.Scanner;
 public class App 
 {
     RepositoryObject repo;
-    public static void main( String[] args ) throws SQLException, ClassNotFoundException, IOException
+    public static void main( String[] args ) throws Exception
     {
         App app=new App();
         //Scanner sc= new Scanner(System.in);
@@ -29,6 +29,10 @@ public class App
         System.out.println("4 - Update Repository");
         System.out.println("6 - Show Changes");
         System.out.println("5 - Exit");
+        System.out.println("7 - Show commits");
+        System.out.println("8 - commit");
+        System.out.println("9 - delete repo");
+        System.out.println("10 - open in Editor");
         System.out.println("Enter Choice :");
 
         choice=Integer.parseInt(br.readLine());
@@ -51,11 +55,27 @@ public class App
                 app.updateRepository();
             break;
             case 5:
-                Database db=Database.getInstance();
-                db.serializeRepositoryToDatabase(app.repo);
                 break;
             case 6:
                 app.displayChanges();
+            break;
+            case 7:
+                app.repo.showCommits();
+            break;
+            case 8:
+                app.repo.commitRepository();
+            break;
+            case 9:
+                Database db=Database.getInstance();
+                db.deleteRepository(app.repo.path);
+                app.repo=null;
+                System.out.println("Successfully deleted");
+            break;
+            case 10:
+                app.repo.openInVSCode();
+            break;
+            case 11:
+                app.repo.rollback();
             break;
         }
         }
