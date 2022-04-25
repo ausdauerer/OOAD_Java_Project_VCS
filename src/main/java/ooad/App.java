@@ -14,9 +14,17 @@ import java.util.Scanner;
  */
 public class App 
 {
+    public static App a=null;
     RepositoryObject repo;
+    public static App getInstance(){
+        if(a==null){
+            a=new App();
+        }
+        return(a);
+    }
     public static void main( String[] args ) throws Exception
     {
+        MenuUI ui=new MenuUI();
         App app=new App();
         //Scanner sc= new Scanner(System.in);
         InputStreamReader r=new InputStreamReader(System.in);    
@@ -109,5 +117,10 @@ public class App
 
     public void displayChanges() throws SQLException, FileNotFoundException, IOException {
         repo.displayChanges();
+    }
+
+    public ArrayList<String> displayRepositories() throws SQLException{
+        Database db=Database.getInstance();
+        return(db.getAllRepositories());
     }
 }
