@@ -1,0 +1,1 @@
+final JList<String> listview = new JList<String>(list); 
