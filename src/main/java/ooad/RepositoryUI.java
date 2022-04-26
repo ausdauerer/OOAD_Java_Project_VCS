@@ -30,10 +30,12 @@ public class RepositoryUI{
         JButton Commit = new JButton("Commit");
         JButton Roll_back = new JButton("Roll Back");
         JButton Show_changes = new JButton("Show Changes");
+        JButton open_with_vscode = new JButton("Open with VScode");
         scroll.setBounds(10, 20, 400, 580);
         Commit.setBounds(420,80,130,30);
         Roll_back.setBounds(420,150,130,30);
         Show_changes.setBounds(420,210,130,30);
+        open_with_vscode.setBounds(420,270,130,30);
         
         Commit.addActionListener(new ActionListener(){
             @Override
@@ -108,10 +110,19 @@ public class RepositoryUI{
             }
         });
 
+        open_with_vscode.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                App app=App.getInstance();
+                app.repo.openInVSCode();
+            }
+        });
+
         open.add(scroll);
         open.add(Commit);
         open.add(Roll_back);
         open.add(Show_changes);
+        open.add(open_with_vscode);
 
 
     }
