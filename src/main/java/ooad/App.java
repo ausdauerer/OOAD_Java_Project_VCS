@@ -14,14 +14,8 @@ import java.util.Scanner;
  */
 public class App 
 {
-    public static App a=null;
-    RepositoryObject repo;
-    public static App getInstance(){
-        if(a==null){
-            a=new App();
-        }
-        return(a);
-    }
+    
+    public RepositoryObject repo;
     public static void main( String[] args ) throws Exception
     {
         MenuUI ui=new MenuUI();
@@ -119,8 +113,16 @@ public class App
         repo.displayChanges();
     }
 
+    public void commitChanges() throws SQLException, FileNotFoundException, IOException {
+        repo.commitRepository();
+    }
+
     public ArrayList<String> displayRepositories() throws SQLException{
         Database db=Database.getInstance();
         return(db.getAllRepositories());
+    }
+
+    public ArrayList<String> getFilesArrayList() throws SQLException, ClassNotFoundException, IOException{
+        return(repo.getFilesInRepo());
     }
 }
