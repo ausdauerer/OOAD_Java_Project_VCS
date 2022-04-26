@@ -67,6 +67,16 @@ public class RepositoryObject implements Serializable {
                 }
             }
         }
+        for (int i = 0; i < prevfilepaths.size(); i++){
+            if(!filepaths.contains(prevfilepaths.get(i))){
+                for(int j=0;j<files.size();j++){
+                    if(files.get(j).path==prevfilepaths.get(i)){
+                        changedFiles.add(files.get(j));
+                        files.remove(j);
+                    }
+                }
+            }
+        }
         commits.add(new CommitObject(changedFiles,changeString));
     }
 
@@ -98,15 +108,20 @@ public class RepositoryObject implements Serializable {
         ArrayList<String> prevfilepaths=getFilesInRepo();
         for (int i = 0; i < filepaths.size(); i++){
             if(!prevfilepaths.contains(filepaths.get(i))){
-                System.out.println(filepaths.get(i)+"  New File");
+                System.out.println("New File : "+filepaths.get(i));
             } 
             else{
                 Blob b=getLatestFileBlob(filepaths.get(i));
                 byte[] b1=b.getBytes(1, (int) b.length());
                 byte[] b2=FileUtils.getByteArrayFromFile(filepaths.get(i));
                 if(!Arrays.equals(b1,b2)){
-                    System.out.println(filepaths.get(i)+" File Changed");
+                    System.out.println("File Edited : "+filepaths.get(i));
                 }
+            }
+        }
+        for (int i = 0; i < prevfilepaths.size(); i++){
+            if(!filepaths.contains(prevfilepaths.get(i))){
+                System.out.println("File Removed"+prevfilepaths.get(i));
             }
         }
     }
@@ -118,15 +133,20 @@ public class RepositoryObject implements Serializable {
         ArrayList<String> prevfilepaths=getFilesInRepo();
         for (int i = 0; i < filepaths.size(); i++){
             if(!prevfilepaths.contains(filepaths.get(i))){
-                changes+=filepaths.get(i)+"  New File\n";
+                changes+="New File : "+filepaths.get(i)+"\n";
             } 
             else{
                 Blob b=getLatestFileBlob(filepaths.get(i));
                 byte[] b1=b.getBytes(1, (int) b.length());
                 byte[] b2=FileUtils.getByteArrayFromFile(filepaths.get(i));
                 if(!Arrays.equals(b1,b2)){
-                    changes+=filepaths.get(i)+"  File Changed\n";
+                    changes+="File Changed : "+filepaths.get(i)+"\n";
                 }
+            }
+        }
+        for (int i = 0; i < prevfilepaths.size(); i++){
+            if(!filepaths.contains(prevfilepaths.get(i))){
+                changes+="File Removed : "+prevfilepaths.get(i)+"\n";
             }
         }
         return(changes);
@@ -197,12 +217,20 @@ public class RepositoryObject implements Serializable {
         for(int i=0;i<co.files.size();i++){
             FileObject f=co.files.get(i);
             System.out.println("Updating file -> "+f.path);
+            
             if(!f.updateToPreviousVersion()){
-                File dFile=new File(f.path);
-                dFile.delete();
-                for(int j=0;j<files.size();j++){
-                    if(files.get(j).path.compareTo(f.path)==0){
-                        files.remove(i);
+                File checkFile=new File(f.path);
+                if(!checkFile.exists()){
+                    f.updateToCurrentVersion();
+                    files.add(f);
+                }
+                else{
+                    File dFile=new File(f.path);
+                    dFile.delete();
+                    for(int j=0;j<files.size();j++){
+                        if(files.get(j).path.compareTo(f.path)==0){
+                            files.remove(i);
+                        }
                     }
                 }
             }

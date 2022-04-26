@@ -4,12 +4,15 @@ import java.util.*;
 
 import javax.xml.crypto.Data;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Paths;
 import java.io.Serializable;
 import java.sql.Blob;
+import java.nio.file.Files;
 import java.sql.SQLException;
 
 public class FileObject implements Serializable{
@@ -66,6 +69,29 @@ public class FileObject implements Serializable{
         int blobid=versions.get(latestVersionIndex).blobid;
         Blob b=db.getBlob(blobid);
         byte[] byt=b.getBytes(1, (int) b.length());
+        OutputStream os = new FileOutputStream(this.path);
+ 
+            // Starting writing the bytes in it
+            os.write(byt);
+ 
+            // Dislay message onconsole for successful
+            // execution
+            System.out.println("Successfully replaced file "+this.path);
+ 
+            // Close the file connections
+            os.close();
+            return(true);
+    }
+
+    public boolean updateToCurrentVersion() throws SQLException, IOException, Exception{ 
+        Database db=Database.getInstance();
+        int blobid=versions.get(latestVersionIndex).blobid;
+        Blob b=db.getBlob(blobid);
+        byte[] byt=b.getBytes(1, (int) b.length());
+        Files.createDirectories(Paths.get(this.path.substring(0,this.path.lastIndexOf("/"))));
+        File ff=new File(this.path);
+        ff.createNewFile();
+        System.out.println("Hello");
         OutputStream os = new FileOutputStream(this.path);
  
             // Starting writing the bytes in it
